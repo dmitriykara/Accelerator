@@ -13,6 +13,8 @@ enum Motion {
     case Right
     case Forward
     case Backward
+    case Up
+    case Down
     case Stable
 }
 
@@ -25,11 +27,13 @@ class ViewController: UIViewController {
     
     let changeX = 0.25;
     let changeY = 0.30;
+    let changeZ = 0.15;
     let iterval = 0.07; // 70 ms
     let motionManager = CMMotionManager()
     var timer: Timer!
     var x = 0.0;
     var y = 0.0;
+    var z = 0.0;
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -43,21 +47,25 @@ class ViewController: UIViewController {
         if let accelerometerData = motionManager.accelerometerData {
             let new_x = accelerometerData.acceleration.x;
             let new_y = accelerometerData.acceleration.y;
+            let new_z = accelerometerData.acceleration.z;
             
             if x == 0.0 && y == 0.0 {
                 x = new_x
                 y = new_y
+                z = new_z
                 return Motion.Stable
             }
             
-            XLabel.text = "\(accelerometerData.acceleration.x)"
-            YLabel.text = "\(accelerometerData.acceleration.y)"
-            ZLabel.text = "\(accelerometerData.acceleration.z)"
+            XLabel.text = "\(new_x)"
+            YLabel.text = "\(new_y)"
+            ZLabel.text = "\(new_z)"
             
             let xUp = (new_x > x) && (new_x - x) > changeX;
             let xDown = (new_x < x) && (x - new_x) > changeX;
             let yUp = (new_y > y) && (new_y - y) > changeY;
-            let yDown = (new_y < y) && (x - new_y) > changeY;
+            let yDown = (new_y < y) && (y - new_y) > changeY;
+            let zUp = (new_z > z) && (new_z - z) > changeY;
+            let zDown = (new_z < z) && (z - new_z) > changeY;
             
             if xUp {
                 return Motion.Right
@@ -70,6 +78,12 @@ class ViewController: UIViewController {
             }
             if yDown {
                 return Motion.Backward
+            }
+            if zUp {
+                return Motion.Up
+            }
+            if zDown {
+                return Motion.Down
             }
         }
         return Motion.Stable
@@ -88,48 +102,27 @@ class ViewController: UIViewController {
     }
     
     func submitAction(motion: Motion) {
+        let json: [String: Any] = ["motion": "\(motion)",]
+        let jsonData = try? JSONSerialization.data(withJSONObject: json)
         
-        //declare parameter as a dictionary which contains string as key and value combination. considering inputs are valid
-        
-        let parameters = [
-            "motion": motion,
-        ]
-        
-        //create the url with URL
-        let url = URL(string: "http://localhost:5000/")! //change the url
-        
-        //create the session object
-        let session = URLSession.shared
-        
-        //now create the URLRequest object using the url object
+        let url = URL(string: "http://192.168.0.104:6000/motion")!
         var request = URLRequest(url: url)
-        request.httpMethod = "POST" //set http method as POST
-        
-        do {
-            request.httpBody = try JSONSerialization.data(withJSONObject: parameters, options: .prettyPrinted) // pass dictionary to nsdata object and set it as request body
-        } catch let error {
-            print(error.localizedDescription)
-        }
-        
+        request.httpMethod = "POST"
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
         request.addValue("application/json", forHTTPHeaderField: "Accept")
+        request.httpBody = jsonData
         
-        //create dataTask using the session object to send data to the server
-        let task = session.dataTask(with: request as URLRequest, completionHandler: { data, response, error in
-            
+        let task = URLSession.shared.dataTask(with: request as URLRequest, completionHandler: {
+            data, response, error in
             guard error == nil else {
                 return
             }
-            
             guard let data = data else {
                 return
             }
-            
             do {
-                //create json object from data
                 if let json = try JSONSerialization.jsonObject(with: data, options: .mutableContainers) as? [String: Any] {
                     print(json)
-                    // handle json...
                 } else {
                     print(data)
                 }
