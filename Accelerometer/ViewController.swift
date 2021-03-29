@@ -11,6 +11,8 @@ import CoreMotion
 enum Motion {
     case Left
     case Right
+    case MoveLeft
+    case MoveRight
     case Forward
     case Backward
     case Up
@@ -34,6 +36,7 @@ class ViewController: UIViewController {
     var x = 0.0;
     var y = 0.0;
     var z = 0.0;
+    var currentMotion = Motion.Stable;
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -56,33 +59,38 @@ class ViewController: UIViewController {
                 return Motion.Stable
             }
             
-            XLabel.text = "\(new_x)"
-            YLabel.text = "\(new_y)"
-            ZLabel.text = "\(new_z)"
+            XLabel.text = "\(new_x - x)"
+            YLabel.text = "\(new_y - y)"
+            ZLabel.text = "\(new_z - z)"
             
-            let xUp = (new_x > x) && (new_x - x) > changeX;
-            let xDown = (new_x < x) && (x - new_x) > changeX;
-            let yUp = (new_y > y) && (new_y - y) > changeY;
-            let yDown = (new_y < y) && (y - new_y) > changeY;
-            let zUp = (new_z > z) && (new_z - z) > changeY;
-            let zDown = (new_z < z) && (z - new_z) > changeY;
-            
-            if xUp {
+            if (new_x > x) && (new_x - x) > changeX && abs(new_y - y) > 0.2 {
+                return Motion.MoveLeft
+            }
+            if (new_x > x) && (new_x - x) > changeX {
                 return Motion.Right
             }
-            if xDown {
+            if (new_x < x) && (x - new_x) > changeX && abs(new_y - y) > 0.2 {
+                return Motion.MoveRight
+            }
+            if (new_x < x) && (x - new_x) > changeX {
                 return Motion.Left
             }
-            if yUp {
+            
+            // ---------------------------------------- //
+            
+            if (new_y > y) && (new_y - y) > changeY {
                 return Motion.Forward
             }
-            if yDown {
+            if (new_y < y) && (y - new_y) > changeY {
                 return Motion.Backward
             }
-            if zUp {
+            
+            // ---------------------------------------- //
+            
+            if (new_z > z) && (new_z - z) > changeY {
                 return Motion.Up
             }
-            if zDown {
+            if (new_z < z) && (z - new_z) > changeY {
                 return Motion.Down
             }
         }
@@ -91,8 +99,18 @@ class ViewController: UIViewController {
     
     @objc func update() {
         let  motion = getMotion()
+        if motion == currentMotion {
+            return
+        } else {
+            if motion != currentMotion && (motion == Motion.Stable || currentMotion == Motion.Stable) {
+                currentMotion = motion
+            } else {
+                return
+            }
+        }
         print(motion)
         resultsLabel.text = "\(motion)"
+        
         submitAction(motion: motion)
         if motion == Motion.Stable {
             resultsLabel.textColor = UIColor.green
