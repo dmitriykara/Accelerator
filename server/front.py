@@ -2,7 +2,7 @@ import socket
 import pickle
 
 sock = socket.socket()
-sock.bind(('', 5000))
+sock.bind(('0.0.0.0', 5000))
 sock.listen(1)
 conn, addr = sock.accept()
 
