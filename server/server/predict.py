@@ -3,6 +3,7 @@ import random
 word = ""
 pred1 = ""
 pred2 = ""
+text = ""
 
 letters = {
     "Left": "йцуфывячс",
@@ -10,6 +11,14 @@ letters = {
     "Forward": "щзхъджэбю",
     "Backward": "кеапми",
 }
+
+def get_text(selection: str = "") -> str:
+    global text
+    if text == "":
+        text = selection
+    elif selection != "":
+        text += f" {selection}"
+    return text
 
 def get_letter(motion: str) -> str: 
     global letters

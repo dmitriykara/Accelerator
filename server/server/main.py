@@ -1,7 +1,7 @@
 import socket
 import pickle
 from flask import Flask, request
-from predict import get_letter, get_word, get_predictions
+from predict import get_letter, get_word, get_predictions, get_text
 
 app = Flask(__name__)
 
@@ -17,6 +17,7 @@ def motion():
     word = ""
     selection = ""
     predicts = []
+    text = get_text("")
 
     if motion in ["Forward", "Backward", "Left", "Right"]:
         letter = get_letter(motion)
@@ -25,9 +26,11 @@ def motion():
     elif motion == "Up":
         predicts = get_predictions()
         selection = predicts[0]
+        text = get_text(selection)
     elif motion == "Down":
         predicts = get_predictions()
         selection = predicts[1]
+        text = get_text(selection)
     else:
         return 'OK', 200
 
@@ -36,6 +39,7 @@ def motion():
         "word": word,
         "predictions": predicts,
         "selection": selection,
+        "text": text,
     }
     print(new_msg)
    
