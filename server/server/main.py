@@ -1,9 +1,11 @@
 import socket
 import pickle
 from flask import Flask, request
+from flask_cors import CORS
 from predict import get_letter, get_word, get_predictions, get_text
 
 app = Flask(__name__)
+CORS(app)
 
 front = socket.socket()
 front.connect(('localhost', 5000))
@@ -18,6 +20,9 @@ def motion():
     selection = ""
     predicts = []
     text = get_text("")
+
+    if motion.startswith("Move"):
+        motion = motion[4:]
 
     if motion in ["Forward", "Backward", "Left", "Right"]:
         letter = get_letter(motion)

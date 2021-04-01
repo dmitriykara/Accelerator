@@ -2,7 +2,7 @@ import requests
 import random
 import time
 
-motions = ["Forward", "Backward", "Left", "Right", "Stable", "Up", "Down"]
+motions = ["Forward", "Backward", "Left", "Right", "Stable", "Up", "Down", "MoveLeft", "MoveRight"]
 
 while True: 
     msg = {
