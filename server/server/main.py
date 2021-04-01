@@ -3,12 +3,13 @@ import json
 from flask import Flask, request
 from flask_cors import CORS
 from predict import get_letter, get_word, get_predictions, get_text
-from websocket import create_connection
+import websocket
 
 app = Flask(__name__)
 CORS(app)
 
-front = create_connection("ws://localhost:5000/")
+front = websocket.WebSocket()
+front.connect("ws://localhost:5000/")
 
 @app.route('/motion', methods=['POST'])
 def motion():
