@@ -1,14 +1,14 @@
 import socket
-import pickle
+import json
 from flask import Flask, request
 from flask_cors import CORS
 from predict import get_letter, get_word, get_predictions, get_text
+from websocket import create_connection
 
 app = Flask(__name__)
 CORS(app)
 
-front = socket.socket()
-front.connect(('localhost', 5000))
+front = create_connection("ws://localhost:5000/")
 
 @app.route('/motion', methods=['POST'])
 def motion():
@@ -48,7 +48,7 @@ def motion():
     }
     print(new_msg)
    
-    front.send(pickle.dumps(new_msg))
+    front.send(json.dumps(new_msg))
 
     return 'OK', 200
 
