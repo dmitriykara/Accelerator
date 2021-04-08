@@ -200,7 +200,7 @@ function App() {
             <div className="predictive__predict-word1 left">{first}</div>
             <div
               className={`predictive__predict-word1 text ${
-                value === "Up" ? "accept" : ""
+                (value === "Up" || value === "Down")  ? "accept" : ""
               }`}
             >
               {currentWord}

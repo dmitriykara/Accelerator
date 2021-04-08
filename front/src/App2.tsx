@@ -104,7 +104,7 @@ export const App2 = () => {
         <div className="predictive__predict-word left">{first}</div>
         <div
           className={`predictive__predict-word text ${
-            value === "Up" ? "accept" : ""
+            (value === "Up" || value === "Down") ? "accept" : ""
           }`}
         >
           {currentWord}
