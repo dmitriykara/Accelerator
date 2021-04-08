@@ -44,11 +44,10 @@ def search_word(numeric: int) -> list:
 
 def get_text(selection: str = "") -> str:
     global text
-    if text == "":
-        text = selection
-    elif selection != "":
-        text += f" {selection}"
-    return text
+    if selection != "":
+        text += f"{selection} "
+        return text 
+    return text + word
 
 def get_letter(motion: str) -> str: 
     global letters
