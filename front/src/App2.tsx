@@ -45,7 +45,7 @@ export const App2 = () => {
         setCurrentWord(wordSuggestions[index].word);
         setFirst(wordSuggestions[index].first);
         setSecond(wordSuggestions[index].second);
-      }, Math.random() * 1000);
+      }, Math.random() * 100 + 1100);
     }
   }, [index]);
   return (
@@ -53,7 +53,7 @@ export const App2 = () => {
       <div className="sentence">
         <span style={{ fontSize: "16px" }}>Введите: </span> "Пример текста"
       </div>
-      <div className="speed">{((Math.random() * 800 + 850)) / 60 + " слов/мин"}</div>
+      <div className="speed">{((Math.random() * 100 + 1100)) / 60 + " слов/мин"}</div>
       <div className="container">
         <div className="row">
           <div className={`col text ${value === "Left" ? "active" : ""}`}>

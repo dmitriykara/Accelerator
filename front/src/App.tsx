@@ -68,25 +68,25 @@ const input: string[] = [
 ];
 
 const wordSuggestions = [
-  { word: 'п', first: 'по', second: 'привет'},
-  { word: 'пр', first: 'привет', second: 'просто'},
-  { word: 'при', first: 'принято', second: 'привет'},
-  { word: 'прим', first: 'примерно', second: 'пример'},
-  { word: 'пример '},
-  { word: 'пример т', first: 'ты', second: 'так'},
-  { word: 'пример те', first: 'тебе', second: 'тебя'},
-  { word: 'пример тек', first: 'текст', second: 'текстов'},
-  { word: 'пример текс', first: 'текст', second: 'текстов'},
-  { word: 'пример текст', first: 'текст', second: 'текста'},
-  { word: 'пример текста '},
-]
+  { word: "п", first: "по", second: "привет" },
+  { word: "пр", first: "привет", second: "просто" },
+  { word: "при", first: "принято", second: "привет" },
+  { word: "прим", first: "примерно", second: "пример" },
+  { word: "пример " },
+  { word: "пример т", first: "ты", second: "так" },
+  { word: "пример те", first: "тебе", second: "тебя" },
+  { word: "пример тек", first: "текст", second: "текстов" },
+  { word: "пример текс", first: "текст", second: "текстов" },
+  { word: "пример текст", first: "текст", second: "текста" },
+  { word: "пример текста " },
+];
 
 function App() {
-  const [value, setValue] = useState('');
+  const [value, setValue] = useState("");
   const [index, setIndex] = useState(0);
-  const [currentWord, setCurrentWord] = useState('');
-  const [first, setFirst] = useState('');
-  const [second, setSecond] = useState('');
+  const [currentWord, setCurrentWord] = useState("");
+  const [first, setFirst] = useState("");
+  const [second, setSecond] = useState("");
 
   useEffect(() => {
     if (index !== input.length) {
@@ -96,7 +96,7 @@ function App() {
         setCurrentWord(wordSuggestions[index].word);
         setFirst(wordSuggestions[index].first);
         setSecond(wordSuggestions[index].second);
-      }, Math.random() * 1000);
+      }, Math.random() * 100 + 1000);
     }
   }, [index]);
 
@@ -105,11 +105,13 @@ function App() {
       <div className="sentence">
         <span style={{ fontSize: "16px" }}>Введите: </span> "Пример текста"
       </div>
-      <div className="speed">{((Math.random() * 800 + 850)) / 60 + " слов/мин"}</div>
+      <div className="speed">
+        {(Math.random() * 100 + 1000) / 60 + " слов/мин"}
+      </div>
       <div className="container">
         <div className="row">
           <div className="col"></div>
-          <div className={`col text ${value === 'Forward' ? 'active' : ''}`}>
+          <div className={`col text ${value === "Forward" ? "active" : ""}`}>
             <div className="a">Ш</div>
             <div className="b">З</div>
             <div className="c">Х</div>
@@ -123,7 +125,7 @@ function App() {
           <div className="col"></div>
         </div>
         <div className="row">
-          <div className={`col text ${value === 'Left' ? 'active' : ''}`}>
+          <div className={`col text ${value === "Left" ? "active" : ""}`}>
             <div className="a">Й</div>
             <div className="b">Ц</div>
             <div className="c">У</div>
@@ -134,7 +136,7 @@ function App() {
             <div className="h">Ч</div>
             <div className="k">С</div>
           </div>
-          <div className={`col marker ${value === 'Up' ? 'accept' : ''}`}>
+          <div className={`col marker ${value === "Up" ? "accept" : ""}`}>
             <svg
               width="100"
               height="100"
@@ -164,7 +166,7 @@ function App() {
               </defs>
             </svg>
           </div>
-          <div className={`col text ${value === 'Right' ? 'active' : ''}`}>
+          <div className={`col text ${value === "Right" ? "active" : ""}`}>
             <div className="a">Н</div>
             <div className="b">Г</div>
             <div className="c">Ш</div>
@@ -177,7 +179,7 @@ function App() {
         </div>
         <div className="row">
           <div className="col"></div>
-          <div className={`col text ${value === 'Backward' ? 'active' : ''}`}>
+          <div className={`col text ${value === "Backward" ? "active" : ""}`}>
             <div className="a">К</div>
             <div className="b">Е</div>
             <div className="c">А</div>
