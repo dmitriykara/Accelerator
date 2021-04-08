@@ -1,85 +1,10 @@
-import React, { useEffect, useRef, useState } from "react";
-import { io } from "socket.io-client";
+import React, { useEffect, useState } from "react";
 import "./App.css";
 
-const NEW_CHAT_MESSAGE_EVENT = "newChatMessage"; // Name of the event
 const SOCKET_SERVER_URL = "ws://0.0.0.0:5000";
 
 let socket = new WebSocket(SOCKET_SERVER_URL);
 
-socket.onopen = function (e) {
-  console.log("[open] Соединение установлено");
-  console.log("Отправляем данные на сервер");
-  socket.send("Меня зовут Джон");
-};
-
-socket.onmessage = function (event) {
-  console.log(`[message] Данные получены с сервера: ${event.data}`);
-};
-
-socket.onclose = function (event) {
-  if (event.wasClean) {
-    console.log(
-      `[close] Соединение закрыто чисто, код=${event.code} причина=${event.reason}`
-    );
-  } else {
-    // например, сервер убил процесс или сеть недоступна
-    // обычно в этом случае event.code 1006
-    console.log("[close] Соединение прервано");
-  }
-};
-
-socket.onerror = function (error) {
-  console.log(`[error] ${error}`);
-};
-const useChat = () => {
-  const [messages, setMessages] = useState([]); // Sent and received messages
-  const socketRef = useRef();
-
-  useEffect(() => {
-    // Creates a WebSocket connection
-    socketRef.current = io(SOCKET_SERVER_URL);
-
-    return () => {
-      socketRef.current.disconnect();
-    };
-  }, []);
-
-  function subscribeToTimer(cb: any) {
-    socketRef.current.on("timer", (timestamp: any) => cb(null, timestamp));
-    socketRef.current.emit("subscribeToTimer", 1000);
-  }
-
-  return { messages, subscribeToTimer };
-};
-
-const input: string[] = [
-  "Backward",
-  "Right",
-  "Backward",
-  "Backward",
-  "Up",
-  "Right",
-  "Backward",
-  "Backward",
-  "Left",
-  "Right",
-  "Up",
-];
-
-const wordSuggestions = [
-  { word: "п", first: "по", second: "привет" },
-  { word: "пр", first: "привет", second: "просто" },
-  { word: "при", first: "принято", second: "привет" },
-  { word: "прим", first: "примерно", second: "пример" },
-  { word: "пример " },
-  { word: "пример т", first: "ты", second: "так" },
-  { word: "пример те", first: "тебе", second: "тебя" },
-  { word: "пример тек", first: "текст", second: "текстов" },
-  { word: "пример текс", first: "текст", second: "текстов" },
-  { word: "пример текст", first: "текст", second: "текста" },
-  { word: "пример текста " },
-];
 
 function App() {
   const [value, setValue] = useState("");
@@ -88,18 +13,20 @@ function App() {
   const [first, setFirst] = useState("");
   const [second, setSecond] = useState("");
 
-  useEffect(() => {
-    if (index !== input.length) {
-      const timerId = setTimeout(() => {
-        setValue(input[index]);
-        setIndex((prev: number) => ++prev);
-        setCurrentWord(wordSuggestions[index].word);
-        setFirst(wordSuggestions[index].first);
-        setSecond(wordSuggestions[index].second);
-      }, Math.random() * 100 + 1000);
-    }
-  }, [index]);
 
+  useEffect(() => {
+    socket.onopen = function(e) {
+      socket.send("Меня зовут Джон");
+    };
+    socket.onmessage = function (event) {
+      console.log(event);
+    };
+    return () => {
+      socket.onclose = function() {
+        console.log('was closed');
+      }
+    }
+  }, [])
   return (
     <section className="main">
       <div className="sentence">
