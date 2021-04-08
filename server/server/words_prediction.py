@@ -28,8 +28,9 @@ def search_word(numeric, dict):
     return output 
     
 
-dict = read_dict()
-while True:
-    w = input()
-    print(search_word(encode_word(w), dict))
+if __name__ == "__main__":
+    dict = read_dict()
+    while True:
+        w = input()
+        print(search_word(encode_word(w), dict))
 

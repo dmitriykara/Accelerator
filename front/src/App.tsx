@@ -3,7 +3,7 @@ import { io } from "socket.io-client";
 import "./App.css";
 
 const NEW_CHAT_MESSAGE_EVENT = "newChatMessage"; // Name of the event
-const SOCKET_SERVER_URL = "ws://localhost:80";
+const SOCKET_SERVER_URL = "ws://0.0.0.0:5000";
 
 let socket = new WebSocket(SOCKET_SERVER_URL);
 
