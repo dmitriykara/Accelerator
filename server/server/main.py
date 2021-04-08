@@ -24,8 +24,6 @@ def motion():
     
     motion = data["motion"]
     letter = ""
-    word = ""
-    selection = ""
     predicts = []
     text = get_text("")
 
@@ -37,8 +35,8 @@ def motion():
 
     if motion in ["Forward", "Backward", "Left", "Right"]:
         letter = get_letter(motion)
-        word = get_word(letter)
         predicts = get_predictions(letter)
+        text = get_text()
     elif motion == "Up":
         predicts = get_predictions()
         selection = predicts[0]
@@ -52,9 +50,7 @@ def motion():
 
     new_msg = {
         "motion": motion,
-        "word": word,
         "predictions": predicts,
-        "selection": selection,
         "text": text,
     }
 
