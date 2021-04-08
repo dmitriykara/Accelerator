@@ -58,7 +58,7 @@ def motion():
         "text": text,
     }
 
-    buff.append(json.dumps(new_msg))
+    buff.append(json.dumps(new_msg, ensure_ascii=False,))
 
     return 'OK', 200
 
@@ -69,6 +69,7 @@ async def serve(websocket, path):
         for msg in buff:
             await websocket.send(msg)
             print(msg)
+        buff.clear()
         time.sleep(0.1)
 
 if __name__ == "__main__":
