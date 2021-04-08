@@ -6,6 +6,7 @@ const SOCKET_SERVER_URL = "ws://0.0.0.0:5000";
 let socket = new WebSocket(SOCKET_SERVER_URL);
 
 function App() {
+  const [cravingText, setCravingText] = useState('');
   const [app, setApp] = useState("1");
   const [value, setValue] = useState("");
   const [currentWord, setCurrentWord] = useState("");
@@ -13,13 +14,14 @@ function App() {
   const [second, setSecond] = useState("");
 
   useEffect(() => {
+    setCravingText(prompt('Напишите ожидаемый после ввода текст: ', 'Привет, мир!'));
     socket.onopen = function (e) {
       socket.send("Меня зовут Джон");
     };
     socket.onmessage = async function (event) {
       const data = JSON.parse(event.data);
-      setValue(data.value);
-      setCurrentWord(data.word);
+      setValue(data.motion);
+      setCurrentWord(data.text);
       setFirst(data.predictions[0]);
       setSecond(data.predictions[1]);
     };
@@ -38,7 +40,7 @@ function App() {
       {app === "1" ? (
         <section className="main">
           <div className="sentence">
-            <span style={{ fontSize: "16px" }}>Введите: </span> "Пример текста"
+            <span style={{ fontSize: "16px" }}>Введите: </span> {cravingText}
           </div>
           <div className="speed">
             {(Math.random() * 100 + 1000) / 60 + " слов/мин"}
